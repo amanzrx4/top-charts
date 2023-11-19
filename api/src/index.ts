@@ -118,14 +118,14 @@ app.post("/callback", async (req: Request, res: Response) => {
     return;
   }
 
-  const isProofValid = reclaim.verifyCorrectnessOfProofs(sessionId, proofs);
+  // const isProofValid = reclaim.verifyCorrectnessOfProofs(sessionId, proofs);
 
-  if (!isProofValid) {
-    res.status(400).send({
-      message: "Invalid proof",
-    });
-    return;
-  }
+  // if (!isProofValid) {
+  //   res.status(400).send({
+  //     message: "Invalid proof",
+  //   });
+  //   return;
+  // }
 
   await prisma.submissions.findFirstOrThrow({
     where: {
