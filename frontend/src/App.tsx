@@ -6,7 +6,7 @@ import { QRCodeSVG } from "qrcode.react";
 // import Form from "./Form";
 // import SubmissionCard from "./Card";
 
-const BASE_URL = import.meta.env.VITE_BACKEND_URL as string;
+const BASE_URL = "https://top-charts-backend.onrender.com";
 // enum SubmissionStatus {
 //   idle = "idle",
 //   pending = "pending",
@@ -23,10 +23,13 @@ type Template = {
 
 function App() {
   const [template, setTemplate] = useState<Template | null>(null);
+  const [modTemplate, setModTemplate] = useState<Template | null>(null);
 
   useEffect(() => {
     if (template) {
-      setInterval(() => checkTemplateStatus(template.id), 1000);
+      setInterval(() => {
+        checkTemplateStatus(template.id);
+      }, 1000);
     }
   }, [template]);
 
@@ -34,7 +37,7 @@ function App() {
     fetch(BASE_URL + "/status/" + id)
       .then((res) => res.json())
       .then((data) => {
-        setTemplate(data.template);
+        setModTemplate(data.template);
       });
   };
 
@@ -70,18 +73,18 @@ function App() {
 
   return (
     <>
-      {template ? (
+      {modTemplate ? (
         <>
-          <h1>{template.name}</h1>
-          {template.proof ? (
+          <h1>{modTemplate.name}</h1>
+          {modTemplate.proof ? (
             <>
-              <h5>{JSON.stringify(template.proof)}</h5>
+              <h5>{JSON.stringify(modTemplate.proof)}</h5>
             </>
           ) : (
             <h5>Status pending</h5>
           )}
-          <h1>{template.name}</h1>
-          <QRCodeSVG value={template.callbackUrl} />
+          <h1>{modTemplate.name}</h1>
+          <QRCodeSVG value={modTemplate.callbackUrl} />
         </>
       ) : (
         <>
