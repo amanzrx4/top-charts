@@ -29,7 +29,7 @@ function App() {
   useEffect(() => {
     if (template) {
       setInterval(() => {
-        checkTemplateStatus(template.id);
+        checkTemplateStatus(template.sessionId);
       }, 1000);
     }
   }, [template]);

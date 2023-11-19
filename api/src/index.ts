@@ -84,10 +84,10 @@ app.get("/init", async (req: Request, res: Response) => {
   }
 });
 
-app.get("/status/:id", async (req: Request, res: Response) => {
+app.get("/status/:sessionId", async (req: Request, res: Response) => {
   const templateFoundInDB = await prisma.submissions.findFirst({
     where: {
-      sessionId: req.params.id,
+      sessionId: req.params.sessionId,
     },
   });
 
@@ -110,6 +110,8 @@ app.post("/callback", async (req: Request, res: Response) => {
   const proofs = req.body;
   // const { proofs } = JSON.parse(decodeURIComponent(req.body));
   const sessionId = req.query.callbackId as string;
+
+  console.log("sessionId", sessionId);
 
   if (!proofs) {
     res.status(400).send({
