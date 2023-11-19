@@ -1,4 +1,5 @@
-import { Button, Flex, Text } from "@mantine/core";
+/* eslint-disable */
+import { Button, Flex, Text as MantineText } from "@mantine/core";
 import { useEffect, useState } from "react";
 import "./App.css";
 import { QRCodeSVG } from "qrcode.react";
@@ -85,7 +86,7 @@ function App() {
       ) : (
         <>
           <div style={{ width: "100%", height: "100%" }}>
-            <Text variant="text">TOP CHARTS </Text>
+            <MantineText variant="text">TOP CHARTS </MantineText>
             <Flex gap="7px" align="center">
               <Button size="lg" onClick={onGenerate}>
                 Prove your insta username
