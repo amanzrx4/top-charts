@@ -1,4 +1,4 @@
-import { Button, Flex } from "@mantine/core";
+import { Button, Flex, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
 import "./App.css";
 import { QRCodeSVG } from "qrcode.react";
@@ -85,21 +85,10 @@ function App() {
       ) : (
         <>
           <div style={{ width: "100%", height: "100%" }}>
-            {/* <Text variant="text">TOP CHARTS </Text> */}
+            <Text variant="text">TOP CHARTS </Text>
             <Flex gap="7px" align="center">
-              <input
-                type="text"
-                style={{
-                  padding: "20px",
-                  backgroundColor: "white",
-                  width: "100%",
-                  color: "black",
-                  borderRadius: "10px",
-                }}
-                placeholder="Enter link to instagram song"
-              />
               <Button size="lg" onClick={onGenerate}>
-                Prove your username
+                Prove your insta username
               </Button>
             </Flex>
           </div>
