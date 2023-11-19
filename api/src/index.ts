@@ -107,7 +107,8 @@ app.get("/status/:id", async (req: Request, res: Response) => {
 app.use(express.text({ type: "*/*" }));
 app.post("/callback", async (req: Request, res: Response) => {
   console.log("req.body", req.body);
-  const { proofs } = JSON.parse(decodeURIComponent(req.body));
+  const proofs = req.body;
+  // const { proofs } = JSON.parse(decodeURIComponent(req.body));
   const sessionId = req.query.callbackId as string;
 
   if (!proofs) {
