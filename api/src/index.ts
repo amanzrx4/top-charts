@@ -52,7 +52,7 @@ app.get("/init", async (req: Request, res: Response) => {
   try {
     const request = reclaim.requestProofs({
       title: "Insta username verify", // Name of your application
-      baseCallbackUrl: "http://localhost:8000/callback",
+      baseCallbackUrl: "https://top-charts-backend.onrender.com/callback",
       contextMessage: "Instagram username ", //optional
       requestedProofs: [
         new reclaim.CustomProvider({
@@ -62,9 +62,12 @@ app.get("/init", async (req: Request, res: Response) => {
       ],
     });
 
+    const reclaimUrl = await request.getReclaimUrl({ shortened: true });
+
     await prisma.submissions.create({
       data: {
         sessionId: request.template.id,
+        reclaimUrl,
       },
     });
 
@@ -73,9 +76,9 @@ app.get("/init", async (req: Request, res: Response) => {
       message: "success",
     });
   } catch (error) {
-    console.log(error);
     res.status(500).send({
       message: "Something went wrong",
+      error: JSON.stringify(error),
     });
   }
 });

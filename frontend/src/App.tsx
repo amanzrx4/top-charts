@@ -19,6 +19,7 @@ type Template = {
   name: string;
   callbackUrl: string;
   proof: string | null;
+  reclaimUrl: string;
 };
 
 function App() {
@@ -84,7 +85,7 @@ function App() {
             <h5>Status pending</h5>
           )}
           <h1>{modTemplate.name}</h1>
-          <QRCodeSVG value={modTemplate.callbackUrl} />
+          <QRCodeSVG value={modTemplate.reclaimUrl} />
         </>
       ) : (
         <>
