@@ -106,6 +106,7 @@ app.get("/status/:id", async (req: Request, res: Response) => {
 //top-charts-backend.onrender.com/callback?callbackId=6f45875f-9641-4a47-81c1-e53f6a35e992
 app.use(express.text({ type: "*/*" }));
 app.post("/callback", async (req: Request, res: Response) => {
+  console.log("req.body", req.body);
   const { proofs } = JSON.parse(decodeURIComponent(req.body));
   const sessionId = req.query.callbackId as string;
 
