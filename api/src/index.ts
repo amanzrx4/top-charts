@@ -103,8 +103,10 @@ app.get("/status/:id", async (req: Request, res: Response) => {
   });
 });
 
-app.post("/submit/:id", async (req: Request, res: Response) => {
+//top-charts-backend.onrender.com/callback?callbackId=6f45875f-9641-4a47-81c1-e53f6a35e992
+https: app.post("/callback", async (req: Request, res: Response) => {
   const proof = req.body.proof;
+  const sessionId = req.query.callbackId as string;
 
   if (!proof) {
     res.status(400).send({
@@ -124,13 +126,13 @@ app.post("/submit/:id", async (req: Request, res: Response) => {
 
   await prisma.submissions.findFirstOrThrow({
     where: {
-      sessionId: req.params.id,
+      sessionId: sessionId,
     },
   });
 
   await prisma.submissions.update({
     where: {
-      sessionId: req.params.id,
+      sessionId,
     },
     data: {
       proof,
