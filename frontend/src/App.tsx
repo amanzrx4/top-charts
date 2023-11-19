@@ -1,7 +1,7 @@
 import { Button, Flex } from "@mantine/core";
 import { useEffect, useState } from "react";
 import "./App.css";
-// import { QRCodeSVG } from "qrcode.react";
+import { QRCodeSVG } from "qrcode.react";
 // import Form from "./Form";
 // import SubmissionCard from "./Card";
 
@@ -11,113 +11,100 @@ const BASE_URL = import.meta.env.VITE_BACKEND_URL as string;
 //   pending = "pending",
 //   completed = "completed",
 // }
+
+type Template = {
+  id: string;
+  sessionId: string;
+  name: string;
+  callbackUrl: string;
+  proof: string | null;
+};
+
 function App() {
+  const [template, setTemplate] = useState<Template | null>(null);
+
+  useEffect(() => {
+    if (template) {
+      setInterval(() => checkTemplateStatus(template.id), 1000);
+    }
+  }, [template]);
+
+  const checkTemplateStatus = async (id: string) => {
+    fetch(BASE_URL + "/status/" + id)
+      .then((res) => res.json())
+      .then((data) => {
+        setTemplate(data.template);
+      });
+  };
+
+  //   {
+  //     "template": {
+  //         "id": "8c0d0a8f-5363-4f05-aa3c-868f0e056392",
+  //         "sessionId": "4b23bac9-a0c4-487f-819a-d3e68eb5fb88",
+  //         "name": "Insta username verify",
+  //         "callbackUrl": "http://localhost:8000/callback?callbackId=4b23bac9-a0c4-487f-819a-d3e68eb5fb88",
+  //         "claims": [
+  //             {
+  //                 "templateClaimId": "e25debcb-e6b6-4123-930c-3f93ca70eac0",
+  //                 "provider": "instagram-user",
+  //                 "payload": {},
+  //                 "context": "{\"contextAddress\":\"0x0\",\"contextMessage\":\"0x8c4d800f6352c3397266359128a21aca34a8d6ff9c2edd9208c3b1cfe5548b54\",\"sessionId\":\"4b23bac9-a0c4-487f-819a-d3e68eb5fb88\"}"
+  //             }
+  //         ]
+  //     },
+  //     "message": "success"
+  // }
   // const [sessionId, setSessionId] = useState("");
   // const [templateUrl, setTemplateUrl] = useState("");
-  const [data, setData] = useState<{ message: string }[]>([]);
+  // const [data, setData] = useState<{ message: string }[]>([]);
   // const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
   //   SubmissionStatus.idle
   // );
 
-  console.log("data", data);
-
-  const fetchAllSubmissions = async () => {
-    return await fetch(BASE_URL + "/whistleblow");
+  const onGenerate = async () => {
+    const res = await fetch((BASE_URL + "/init") as string);
+    const data = (await res.json()).template as Template;
+    setTemplate(data);
   };
-
-  useEffect(() => {
-    fetchAllSubmissions().then((res) => {
-      res.json().then((data) => {
-        setData(data.data);
-      });
-    });
-  }, []);
-
-  // const onGenerate = async () => {
-  //   const res = await fetch((BASE_URL + "/generate") as string, {
-  //     method: "POST",
-  //   });
-  //   const data = (await res.json()) as {
-  //     sessionId: string;
-  //     templateUrl: string;
-  //   };
-  //   setSessionId(data.sessionId);
-  //   setTemplateUrl(data.templateUrl);
-  // };
-
-  // const onFetchSessionData = async (id: string) => {
-  //   // /data/:sessionId
-  //   const res = await fetch(BASE_URL + "/status/" + id);
-  //   const data = (await res.json()) as {
-  //     status: SubmissionStatus;
-  //     sessionId: string;
-  //   };
-  //   setSubmissionStatus(data.status);
-  // };
-
-  // useEffect(() => {
-  //   if (sessionId === "") return;
-
-  //   if (submissionStatus === SubmissionStatus.idle) {
-  //     onFetchSessionData(sessionId);
-  //     return;
-  //   }
-
-  //   if (submissionStatus === SubmissionStatus.completed) return;
-  //   setInterval(() => {
-  //     console.log("fetching", sessionId);
-  //     onFetchSessionData(sessionId);
-  //   }, 2000);
-  // }, [sessionId, submissionStatus]);
-
-  // if (submissionStatus === SubmissionStatus.completed) {
-  //   return <Form sessionId={sessionId} />;
-  // }
 
   return (
     <>
-      <div style={{ width: "100%", height: "100%" }}>
-        <div className="text-container">
-          <h1>TOP CHARTS</h1>
-        </div>
-
-        {/* <Text variant="text">TOP CHARTS </Text> */}
-        <Flex gap="7px" align="center">
-          <input
-            type="text"
-            style={{
-              padding: "20px",
-              backgroundColor: "white",
-              width: "100%",
-              color: "black",
-              borderRadius: "10px",
-            }}
-            placeholder="Enter link to instagram song"
-          />
-          <Button size="lg" onClick={() => {}}>
-            Submit
-          </Button>
-        </Flex>
-      </div>
-      {/* {sessionId !== "" ? (
-        <div>
-          <h3>Session ID: {sessionId}</h3>
-          <QRCodeSVG value={templateUrl || ""} />,
-          <h2>Status: {submissionStatus.toUpperCase()}</h2>
-        </div>
+      {template ? (
+        <>
+          <h1>{template.name}</h1>
+          {template.proof ? (
+            <>
+              <h5>{JSON.stringify(template.proof)}</h5>
+            </>
+          ) : (
+            <h5>Status pending</h5>
+          )}
+          <h1>{template.name}</h1>
+          <QRCodeSVG value={template.callbackUrl} />
+        </>
       ) : (
-        <div style={{ width: "100%" }}>
-          <Button mb={"lg"} variant="outline" onClick={onGenerate}>
-            Whistleblow
-          </Button>
-
-          <Flex gap={"lg"} direction={"column"}>
-            {data.map((item) => {
-              return <SubmissionCard message={item.message} />;
-            })}
-          </Flex>
-        </div>
-      )} */}
+        <>
+          <div style={{ width: "100%", height: "100%" }}>
+            {/* <Text variant="text">TOP CHARTS </Text> */}
+            <Flex gap="7px" align="center">
+              <input
+                type="text"
+                style={{
+                  padding: "20px",
+                  backgroundColor: "white",
+                  width: "100%",
+                  color: "black",
+                  borderRadius: "10px",
+                }}
+                placeholder="Enter link to instagram song"
+              />
+              <Button size="lg" onClick={onGenerate}>
+                Prove your username
+              </Button>
+            </Flex>
+          </div>
+        </>
+      )}
     </>
   );
 }

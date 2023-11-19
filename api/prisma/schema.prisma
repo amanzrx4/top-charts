@@ -11,9 +11,7 @@ datasource db {
 model submissions {
   id          String @id @map("_id") @default(cuid()) 
   sessionId   String @unique
-  proofHash   String?
   proof       String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  message     String?
 }
