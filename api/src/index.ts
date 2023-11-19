@@ -62,7 +62,7 @@ app.get("/init", async (req: Request, res: Response) => {
       ],
     });
 
-    const reclaimUrl = await request.getReclaimUrl({ shortened: true });
+    const reclaimUrl = await request.getReclaimUrl();
 
     await prisma.submissions.create({
       data: {
@@ -76,6 +76,7 @@ app.get("/init", async (req: Request, res: Response) => {
       message: "success",
     });
   } catch (error) {
+    console.log("error", error);
     res.status(500).send({
       message: "Something went wrong",
       error: JSON.stringify(error),
