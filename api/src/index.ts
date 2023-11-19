@@ -66,7 +66,7 @@ app.get("/init", async (req: Request, res: Response) => {
 
     await prisma.submissions.create({
       data: {
-        sessionId: request.template.id,
+        sessionId: request.template.sessionId,
         reclaimUrl,
       },
     });
