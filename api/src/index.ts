@@ -104,7 +104,8 @@ app.get("/status/:id", async (req: Request, res: Response) => {
 });
 
 //top-charts-backend.onrender.com/callback?callbackId=6f45875f-9641-4a47-81c1-e53f6a35e992
-https: app.post("/callback", async (req: Request, res: Response) => {
+app.use(express.text({ type: "*/*" }));
+app.post("/callback", async (req: Request, res: Response) => {
   const { proofs } = JSON.parse(decodeURIComponent(req.body));
   const sessionId = req.query.callbackId as string;
 
@@ -138,6 +139,12 @@ https: app.post("/callback", async (req: Request, res: Response) => {
       proof: proofs,
     },
   });
+
+  return res.status(200).send(
+    `
+    <h1>USERNAME VERIFIED SUCCESSFULLY</h1>
+    `
+  );
 });
 
 app.listen(port, () => {
